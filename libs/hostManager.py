@@ -122,7 +122,7 @@ def hosts_remove(config, host, user=None):
                 return config
     print(f"Host {host} not found in configuration.")
     input("Press Enter to continue...")
-
+    return config
 def host_cli(config = 'config.yaml'):
     """
     CLI for managing hosts in the configuration.
