@@ -13,6 +13,12 @@ import os
 import libs.keyManager as keyManager
 import libs.userManager as userManager
 
+pwds = {}
+
+directory = "./tempKeys"
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
 import signal
 def signal_handler(sig, frame):
     print('\nYou pressed Ctrl+C! Exiting gracefully...')
@@ -32,15 +38,10 @@ def graceFulExit():
         os.rmdir(directory)
     exit()
 
-pwds = {}
-
-directory = "./tempKeys"
-if not os.path.exists(directory):
-    os.makedirs(directory)
-
 menu = """
 Welcome to the SSH Key Manager, please select an option:\n
-1. Fetch and display all SSH keys\n2. Fix SSH key issues
+1. Fetch and display all SSH keys
+2. Fix SSH key issues
 3. Add User
 4. Add Key(s) to User
 5. Remove Key from User
