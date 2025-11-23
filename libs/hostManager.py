@@ -109,7 +109,7 @@ def host_cli(config = 'config.yaml'):
     while True:
         os.system('cls' if os.name == 'nt' else 'clear')
         hosts_print(config)
-        user_input = input("Type 'add' to add host, 'remove' to remove host, followed by the host you intend to edit in the format username@host (type 'back', 'done' or 'q to finish): \n").strip()
+        user_input = input("Type 'add' to add host, 'remove' to remove host, followed by the host you intend to edit in the format username@host (type 'back', 'done' or 'q' to finish): \n").strip()
         if user_input.lower() in ['back', 'done', 'q']:
             return
         parts = user_input.split()
