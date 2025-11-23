@@ -78,6 +78,8 @@ def hosts_add(config, host, user):
                 print(f"User {user} already exists for host {host} in configuration.")
                 input("Press Enter to continue...")
                 return config
+            if 'users' not in h or not isinstance(h['users'], list):
+                h['users'] = []
             h['users'].append(user)
             return config
     config['hosts'].append({'host': host, 'users': [user]})
