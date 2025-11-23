@@ -115,7 +115,7 @@ def hosts_remove(config, host, user=None):
             if user is None:
                 del config['hosts'][i]
                 return config
-            if user in h['users']:
+            if user in h.get('users', []):
                 h['users'].remove(user)
                 if len(h['users']) == 0:
                     del config['hosts'][i]
