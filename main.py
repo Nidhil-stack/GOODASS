@@ -13,6 +13,11 @@ import os
 import libs.keyManager as keyManager
 import libs.userManager as userManager
 
+import signal
+def signal_handler(sig, frame):
+    print('\nYou pressed Ctrl+C! Exiting gracefully...')
+    graceFulExit()
+signal.signal(signal.SIGINT, signal_handler)
 
 def graceFulExit():
     """Cleans up temporary files and exits the program."""
@@ -34,12 +39,12 @@ if not os.path.exists(directory):
 
 menu = """
 Welcome to the SSH Key Manager, please select an option:\n
-1. Fetch and display all SSH keys\n2. Fix SSH key issues\n
-3. Add User\n
+1. Fetch and display all SSH keys\n2. Fix SSH key issues
+3. Add User
 4. Add Key(s) to User
 5. Remove Key from User
-6. Remove User\n
-7. Exit\n
+6. Remove User
+7. Exit
 """
 
 #### Main CLI Loop ####
