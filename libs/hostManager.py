@@ -82,7 +82,7 @@ def hosts_add(config, host, user):
                 h['users'] = []
             h['users'].append(user)
             return config
-    config['hosts'].append({'host': host, 'users': [user]})
+    config['hosts'].append({'host': host, 'users': [user] if user else []})
     return config
 
 def hosts_remove(config, host, user=None):
