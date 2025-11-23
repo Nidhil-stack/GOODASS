@@ -4,6 +4,10 @@ import os
 
 
 def user_print(config = None):
+    """Prints a table of users with their emails and associated keys.
+     Parameters:
+    - config (dict): Configuration dictionary containing user data. If None, it loads from 'config.yaml'.
+    """
     if config is None:
         config = load_config()
     users = config.get('users', [])
@@ -29,6 +33,15 @@ def user_print(config = None):
     print(user_table)
 
 def user_add(config, username, email, keys):
+    """Adds a new user to the configuration.
+    Parameters:
+    - config (dict): Configuration dictionary containing user data.
+    - username (str): Name of the new user.
+    - email (str): Email of the new user.
+    - keys (list): List of keys associated with the new user.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     new_user = {
         'name': username,
         'email': email,
@@ -43,15 +56,30 @@ def user_add(config, username, email, keys):
     return config
 
 def load_config(path='config.yaml'):
+    """Loads the configuration from a YAML file.
+    Parameters:
+    - path (str): Path to the configuration file.
+    Returns:
+    - config (dict): Configuration dictionary.
+    """
     with open(path, 'r') as f:
         config = yaml.safe_load(f)
     return config
 
 def save_config(config, path='config.yaml'):
+    """Saves the configuration to a YAML file.
+    Parameters:
+    - config (dict): Configuration dictionary.
+    - path (str): Path to the configuration file.
+    """
     with open(path, 'w') as f:
         yaml.dump(config, f)
 
 def user_add_cli(config='config.yaml'):
+    """CLI for adding a new user.
+    Parameters:
+    - config (str or dict): Path to the configuration file or configuration dictionary.
+    """
     if isinstance(config, str):
         config = load_config(config)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -67,6 +95,14 @@ def user_add_cli(config='config.yaml'):
 
 
 def user_add_key(config, email, key):
+    """Adds a key to a user in the configuration.
+    Parameters:
+    - config (dict): Configuration dictionary containing user data.
+    - email (str): Email of the user to add the key to.
+    - key (str): SSH key string.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     users = config.get('users', [])
     for user in users:
         if user['email'] == email:
@@ -83,6 +119,13 @@ def user_add_key(config, email, key):
     return config
 
 def user_add_key_cli(config='config.yaml', email=None):
+    """CLI for adding keys to a user.
+    Parameters:
+    - config (str or dict): Path to the configuration file or configuration dictionary.
+    - email (str): Email of the user to add keys to.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     if isinstance(config, str):
         config = load_config(config)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -120,6 +163,14 @@ def user_add_key_cli(config='config.yaml', email=None):
 
 
 def user_remove_key(config, email, key_value):
+    """Removes a key from a user in the configuration.
+    Parameters:
+    - config (dict): Configuration dictionary containing user data.
+    - email (str): Email of the user to remove the key from.
+    - key_value (str): SSH key string to be removed.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     users = config.get('users', [])
     for user in users:
         if user['email'] == email:
@@ -134,6 +185,13 @@ def user_remove_key(config, email, key_value):
     return config
 
 def user_remove_key_cli(config='config.yaml', email=None):
+    """CLI for removing keys from a user.
+    Parameters:
+    - config (str or dict): Path to the configuration file or configuration dictionary.
+    - email (str): Email of the user to remove keys from.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     if isinstance(config, str):
         config = load_config(config)
     os.system('cls' if os.name == 'nt' else 'clear')
@@ -186,6 +244,11 @@ def user_remove_key_cli(config='config.yaml', email=None):
 
 
 def user_print_keys(config, email):
+    """Prints a table of keys for a specific user.
+    Parameters:
+    - config (dict): Configuration dictionary containing user data.
+    - email (str): Email of the user whose keys are to be printed.
+    """
     users = config.get('users', [])
     for user in users:
         if user['email'] == email:
@@ -203,6 +266,13 @@ def user_print_keys(config, email):
 
 
 def user_remove(config, email):
+    """Removes a user from the configuration.
+    Parameters:
+    - config (dict): Configuration dictionary containing user data.
+    - email (str): Email of the user to remove.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     users = config.get('users', [])
     for user in users:
         if user['email'] == email:
@@ -211,6 +281,13 @@ def user_remove(config, email):
     return config
 
 def user_remove_cli(config='config.yaml', email=None):
+    """CLI for removing a user.
+    Parameters:
+    - config (str or dict): Path to the configuration file or configuration dictionary.
+    - email (str): Email of the user to remove.
+    Returns:
+    - config (dict): Updated configuration dictionary.
+    """
     if isinstance(config, str):
         config = load_config(config)
     if email is None:
