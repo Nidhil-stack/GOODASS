@@ -103,7 +103,13 @@ def hosts_remove(config, host, user=None):
     input("Press Enter to continue...")
 
 def host_cli(config = 'config.yaml'):
-    """CLI for managing hosts in the configuration."""
+    """
+    CLI for managing hosts in the configuration.
+
+    Parameters:
+    - config (str or dict): Either a string specifying the path to the configuration file (default: 'config.yaml'),
+      or a dictionary containing the loaded configuration. If a string is provided, the configuration will be loaded from the file.
+    """
     if isinstance(config, str):
         config = load_config(config)
     while True:
