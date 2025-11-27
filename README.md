@@ -1,4 +1,4 @@
-# ssh-key-manager
+# Global Oversight Of Deployed Authorized SSH Settings
 
 A lightweight utility to distribute and manage SSH keys across multiple servers in a secure and repeatable way.
 
