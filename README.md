@@ -1,44 +1,47 @@
-# Global Oversight Of Deployed Authorized SSH Settings
+## 🚧 WIP: Global Oversight of Deployed Authorized SSH Settings (Main Branch)
 
-# Install and first configuration
-To install the package use pip (e.g. "pip install download_directory/dist/goodass[...].whl
-The only thing to add is a yaml file called "settings.yaml" in the folder "goodass" that's found in ~/.config on Unix systems, appdata in Windows and somewhere else in MacOs, with the content "ssh_private_key_path: [your key path]"
-Optionally you can provide your own config file, to skip setting it up from the wizard, in the same folder. An example file will be provided in future releases.
+-----
 
-Typical workflow
-- verify ssh connectivity to each host
-- run 'goodass'
-- use the wizard to add hosts, users and keys
-- use the wizard to launch the "fix keys" utility, that will sync your configuration to all added hosts
+### ⚠️ **WORK IN PROGRESS**
 
-Key management notes
-- Do not commit private keys to the repository.
-- Store private keys in a secure location and restrict permissions (`chmod 600`).
-- Public keys can be included in the configuration for distribution.
+This branch is under active development. **No stable installation procedure exists.** Do not use this code in production.
+### ❗**I'm close to a first readily usable release, if you want to try it go to the "wip_pip-packaging" branch"
 
-Security
-- Never include passwords or private keys in `config.yaml` or commit them to source control.
-- Use an SSH agent or local file paths with restrictive permissions to prevent accidental exposure.
-- Verify remote user permissions and the SSH policies on destination servers before mass-distribution.
+-----
 
-Development & testing
-- To test the program in developement you can launch "cli.py" from the src/goodass/ directory
-- Test locally using a config that targets test VMs or containers.
+### 🚀 **Goal**
 
-Contributing
-- Report bugs by opening an issue on GitHub with reproduction steps.
-- Submit improvements via pull requests with focused changes and a clear description.
-- Keep changes minimal and include tests for new functionality where possible.
+To provide a CLI utility for standardized management and deployment of SSH `authorized_keys` across multiple hosts.
 
-Roadmap / TODO
-- Add non interactive mode for automation
-- Add a small TUI for quick configuration (?)
-- Add the possibility to sync config.yaml with a remote server via sftp, to allow multiple users to edit it
+### ⚙️ **Intended Configuration**
 
-License
-This project is released under the license included in the repository (see `LICENSE`).
+| File | Purpose | Location Example (Linux) |
+| :--- | :--- | :--- |
+| **`settings.yaml`** | Local private key path (`ssh_private_key_path: ...`) | `~/.config/goodass/` |
+| **`config.yaml`** | Hosts, Users, and Public Keys for distribution | `~/.config/goodass/` |
 
-Contact
+### 🛡️ **Security**
+
+  * **No Committing:** **Never** include private keys or passwords in `config.yaml` or source control.
+  * **Permissions:** Private keys must have strict file permissions (`chmod 600`).
+
+### 🧑‍💻 **Development Run**
+
+Test the current state:
+
+```bash
+python src/goodass/cli.py
+```
+
+### 🗺️ **Roadmap / TODO**
+
+  * Non-interactive mode.
+  * Configuration TUI.
+  * SFTP synchronization for `config.yaml`.
+
+-----
+
+### 📧 **Contact**
 - **Author:** `Nidhil-stack`
 - **Contributors:**
 
