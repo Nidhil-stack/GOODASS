@@ -1,144 +1,104 @@
-# Global Oversight Of Deployed Authorized SSH Settings
+## 🔐 Global Oversight Of Deployed Authorized SSH Settings
 
-A lightweight utility to distribute and manage SSH keys across multiple servers in a secure and repeatable way.
+This document provides installation instructions and operational guidelines for managing SSH authorized keys across multiple hosts.
 
-Purpose: automate adding public keys to remote users and manage SSH permissions from a single CLI tool.
+-----
 
-Status: initial release / CLI utility.
+## ⚙️ Installation and First Configuration
 
-Table of Contents
+### 📥 Installation
 
-- Description
-- Features
-- Requirements
-- Installation
-- Configuration
-- Usage
-- Security Notes
-- Development & Testing
-- Contributing
-- License
+Install the package using **pip** from the provided Wheel file:
 
-Description
-
-`ssh-key-manager` is a Python script that simplifies distributing SSH public keys to multiple hosts. It reads a YAML configuration (based on `config.yaml.example`) and applies the keys and permissions defined for remote users.
-
-Main features
-
-- Add public keys to remote users' `authorized_keys`
-- Support using a local private key for authentication
-- Interactive (wizard) mode for step-by-step operations
-- Central configuration via `config.yaml`
-
-Requirements
-
-- Python 3.8+ (Python 3.10+ recommended)
-- Dependencies listed in `requirements.txt`
-- Valid SSH access to target hosts (via password or private key)
-
-Installation
-
-1. Clone the repository or copy the files to your machine:
-
-```
-git clone https://github.com/Nidhil-stack/ssh-key-manager.git
-cd ssh-key-manager
+```bash
+pip install download_directory/dist/goodass[...].whl
 ```
 
-2. Create a virtual environment and install dependencies:
+### 🛠️ Configuration File Setup
 
-```
-python -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-```
+The primary configuration requires creating a **`settings.yaml`** file containing the path to your SSH private key.
 
-3. Verify `main.py` and `libs/keyManager.py` are present.
+| Operating System | Absolute Configuration Path |
+| :--- | :--- |
+| **Linux/Unix** | `~/.config/goodass/settings.yaml` |
+| **Windows** | `%APPDATA%\goodass\settings.yaml` |
+| **macOS** | `~/Library/Application Support/goodass/settings.yaml` |
 
-Configuration
+The content of the `settings.yaml` file must be:
 
-- Copy the example configuration and edit it:
-
-```
-cp config.yaml.example config.yaml
+```yaml
+ssh_private_key_path: /absolute/path/to/your/key
 ```
 
-- Open `config.yaml` and define the following (see `config.yaml.example` for full format):
+> **Note:** Replace `/absolute/path/to/your/key` with the actual, absolute path of your SSH private key file.
 
-- `hosts`: list of hosts/addresses to operate on
-- `users`: remote users to which keys should be added
-- `keys`: public keys (or local file paths) to distribute
+### 📝 Optional Configuration
 
-Minimal example (illustrative only):
+You can optionally provide a full configuration file, **`config.yaml`**, in the same directory to skip the initial setup wizard. An example file will be provided in future releases.
 
-```
-hosts:
-	- host: server1.example.com
-		port: 22
-		user: root
-users:
-	- name: deploy
-		public_key: |
-			ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCy...
-```
+-----
 
-If you prefer to use a private key to connect, place the private key file (for example, `id_rsa`) in the same folder as `main.py` or specify its path in the configuration.
+## 🚀 Typical Workflow
 
-Usage
+1.  **Verify Connectivity:** Ensure SSH connectivity is working for all target hosts.
+2.  **Run Program:** Execute the main command:
+    ```bash
+    goodass
+    ```
+3.  **Initial Setup (Wizard):** Use the interactive wizard to add **hosts**, **users**, and associated **keys**.
+4.  **Launch Key Fix Utility:** Use the wizard to launch the **"fix keys" utility**, which synchronizes your configured keys to the `authorized_keys` file on all added hosts.
 
-- Run the script in interactive (wizard) mode:
+-----
 
-```
-python main.py
-```
+## 🔑 Key Management Notes
 
-- For non-interactive or automated runs, ensure `config.yaml` is valid and SSH access is available without password prompts (e.g., via ssh-agent or pre-authorized keys).
+  * **Private Keys:** **Do not** commit private keys to the source code repository. Store them in a secure location.
+  * **Permissions:** Restrict access to private keys using strict file permissions (e.g., `chmod 600 /path/to/private/key`).
+  * **Public Keys:** Public keys can be safely included in the **`config.yaml`** for distribution.
 
-Typical workflow
+-----
 
-- Prepare `config.yaml` with hosts and keys
-- Verify SSH connectivity to each host
-- Run `python main.py` and follow the wizard
+## 🛡️ Security Best Practices
 
-Key management notes
+  * **Sensitive Data:** **Never** include passwords or private keys directly in **`config.yaml`** or commit them to source control.
+  * **Agent Usage:** Utilize an **SSH agent** or rely on the local file paths with restrictive permissions defined in **`settings.yaml`** to prevent accidental exposure.
+  * **Pre-Distribution Checks:** Before mass-distributing keys, verify the remote user permissions and the existing SSH policies (`sshd_config`) on the destination servers.
 
-- Do not commit private keys to the repository.
-- Store private keys in a secure location and restrict permissions (`chmod 600`).
-- Public keys can be included in the configuration for distribution.
+-----
 
-Security
+## 🧑‍💻 Development & Testing
 
-- Never include passwords or private keys in `config.yaml` or commit them to source control.
-- Use an SSH agent or local file paths with restrictive permissions to prevent accidental exposure.
-- Verify remote user permissions and the SSH policies on destination servers before mass-distribution.
+  * **Execution:** To run the program during development, launch the entry point script directly:
+    ```bash
+    python src/goodass/cli.py
+    ```
+  * **Local Testing:** Test the program locally using a configuration that targets dedicated **test VMs** or **containers** to avoid impacting production systems.
 
-Development & testing
+-----
 
-- Test locally using a config that targets test VMs or containers.
-- Add debug prints to `libs/keyManager.py` or run the script with a verbosity flag if provided.
+## 🤝 Contributing
 
-Contributing
+  * **Bug Reporting:** Report bugs by opening an issue on **GitHub** and providing clear steps to reproduce the problem.
+  * **Improvements:** Submit improvements via **pull requests**. Ensure changes are focused, clearly described, and include tests for new functionality where possible.
 
-- Report bugs by opening an issue on GitHub with reproduction steps.
-- Submit improvements via pull requests with focused changes and a clear description.
-- Keep changes minimal and include tests for new functionality where possible.
+-----
 
-Roadmap / TODO
+## 🗺️ Roadmap / TODO
 
-- Allow specifying the path to the private key externally
-- Add detached/daemon mode for automation
-- Add a small TUI for quick configuration (?)
-- Add generation/editing of `config.yaml` from within the tool
+  * Implement a **non-interactive mode** for automated scripting.
+  * Consider adding a small **Text User Interface (TUI)** for quick configuration.
+  * Add functionality to synchronize **`config.yaml`** with a remote server via **SFTP**, enabling configuration collaboration among multiple users.
 
-License
+-----
 
-This project is released under the license included in the repository (see `LICENSE`).
+## ⚖️ License
 
-Contact
+This project is released under the license included in the repository. See the **`LICENSE`** file for details.
 
-- **Author:** `Nidhil-stack`
-- **Contributors:**
+-----
 
+## 📧 Contact
+
+  * **Author:** `Nidhil-stack`
+  * **Contributors:** 
   <a href="https://github.com/EddyDevProject"><img src="https://github.com/EddyDevProject.png" width="60px"/><br /></a>
-
----
