@@ -4,19 +4,34 @@ This document provides installation instructions and operational guidelines for 
 
 -----
 
-## ⚙️ Installation and First Configuration
+## ⚙️ Installation and Configuration
 
 ### 📥 Installation
 
 Install the package using **pip** from the provided Wheel file:
 
 ```bash
-pip install download_directory/dist/goodass[...].whl
+pip install download_directory/dist/goodass-0.0.3-py3-none-any.whl
 ```
 
-### 🛠️ Configuration File Setup
+### 🚀 First Run and Setup Wizard
 
-The primary configuration requires creating a **`settings.yaml`** file containing the path to your SSH private key.
+The program now includes an **interactive Setup Wizard** that handles the initial configuration.
+
+1.  **Run Program:** Execute the main command:
+    ```bash
+    goodass
+    ```
+2.  **Wizard Activation:** The program will automatically launch the **Setup Wizard** if the required **`settings.yaml`** file is missing.
+3.  **Automatic Configuration:** The wizard allows you to:
+      * **Create** the `settings.yaml` file interactively.
+      * **Generate a new SSH keypair** for immediate use (if you don't have one).
+
+> **Note:** Because the Setup Wizard can now create the configuration, the initial configuration is **automatically skipped** if the `settings.yaml` file is found.
+
+### 📝 Configuration Files
+
+The primary configuration file, **`settings.yaml`**, must be located in the application configuration directory.
 
 | Operating System | Absolute Configuration Path |
 | :--- | :--- |
@@ -24,29 +39,38 @@ The primary configuration requires creating a **`settings.yaml`** file containin
 | **Windows** | `%APPDATA%\goodass\settings.yaml` |
 | **macOS** | `~/Library/Application Support/goodass/settings.yaml` |
 
-The content of the `settings.yaml` file must be:
+A minimal `settings.yaml` file looks like this:
 
 ```yaml
 ssh_private_key_path: /absolute/path/to/your/key
 ```
 
-> **Note:** Replace `/absolute/path/to/your/key` with the actual, absolute path of your SSH private key file.
-
-### 📝 Optional Configuration
-
-You can optionally provide a full configuration file, **`config.yaml`**, in the same directory to skip the initial setup wizard. An example file will be provided in future releases.
+You can always **manually create or edit** this file, or provide a full configuration in the optional **`config.yaml`** file to bypass the initial wizard prompts.
 
 -----
 
-## 🚀 Typical Workflow
+## ⚠️ Optional Password Configuration (Use with Caution)
 
-1.  **Verify Connectivity:** Ensure SSH connectivity is working for all target hosts.
-2.  **Run Program:** Execute the main command:
+An optional **`passwords.yaml`** file can be placed in the same configuration directory to **skip manual password entry** during **bulk host registration**.
+
+> **🛑 WARNING: SECURITY RISK**
+>
+>   * The use of `passwords.yaml` is **strongly discouraged** as it stores credentials in plaintext.
+>   * If used, it is **highly recommended to delete the file immediately** after the bulk registration is complete.
+>   * **Never** commit this file to any source code repository.
+
+-----
+
+## 🛠️ Typical Workflow
+
+1.  **Verify Connectivity:** Ensure basic SSH connectivity is working for all target hosts.
+2.  **Run Program:**
     ```bash
     goodass
     ```
-3.  **Initial Setup (Wizard):** Use the interactive wizard to add **hosts**, **users**, and associated **keys**.
-4.  **Launch Key Fix Utility:** Use the wizard to launch the **"fix keys" utility**, which synchronizes your configured keys to the `authorized_keys` file on all added hosts.
+3.  **Main Operations:** Use the interactive program (or wizard) to:
+      * Add **hosts**, **users**, and associated **keys**.
+      * Launch the **"fix keys" utility**, which synchronizes your configured keys to the `authorized_keys` file on all added hosts.
 
 -----
 
@@ -100,5 +124,7 @@ This project is released under the license included in the repository. See the *
 ## 📧 Contact
 
   * **Author:** `Nidhil-stack`
-  * **Contributors:** 
-  <a href="https://github.com/EddyDevProject"><img src="https://github.com/EddyDevProject.png" width="60px"/><br /></a>
+  * **Contributors:**
+    \<a href="[https://github.com/EddyDevProject](https://github.com/EddyDevProject)"\>\<img src="[https://github.com/EddyDevProject.png](https://github.com/EddyDevProject.png)" width="60px"/\>\<br /\>\</a\>
+
+-----
