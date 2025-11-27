@@ -122,7 +122,7 @@ def main():
         settings = yaml.safe_load(f)
         ssh_private_key_path = settings.get("ssh_private_key_path", "")
 
-    if os.path.exists(os.path.join(directory, "passwords.yaml")):
+    if os.path.exists(os.path.join(config_dir, "passwords.yaml")):
         with open(os.path.join(directory, "passwords.yaml"), "r") as f:
             pass_file = yaml.safe_load(f)
             for host_entry in pass_file.get("hosts", []):
