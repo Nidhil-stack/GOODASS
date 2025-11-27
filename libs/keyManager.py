@@ -177,8 +177,9 @@ def upload_ssh_file(host, username, pwds, console_lock=None, directory="./tempKe
                 raise e
         if console_lock and console_lock.locked():
             console_lock.release()
-        sftp = client.open_sftp()
+        sftp = None
         try:
+            sftp = client.open_sftp()
             if username == "root":
                 sftp.put(
                     os.path.join(directory, f"root@{host}.authorized_keys"),
@@ -189,8 +190,6 @@ def upload_ssh_file(host, username, pwds, console_lock=None, directory="./tempKe
                     os.path.join(directory, f"{username}@{host}.authorized_keys"),
                     f"/home/{username}/.ssh/authorized_keys",
                 )
-            sftp.close()
-            client.close()
         except Exception as e:
             if console_lock:
                 console_lock.acquire()
@@ -200,8 +199,14 @@ def upload_ssh_file(host, username, pwds, console_lock=None, directory="./tempKe
                 )
                 if console_lock:
                     console_lock.release()
+            else:
+                if console_lock and console_lock.locked():
+                    console_lock.release()
+                raise e
+        finally:
+            if sftp:
                 sftp.close()
-                client.close()
+            client.close()
 
 
 def create_ssh_file(hostname, key_data, directory="./tempKeys"):
@@ -351,8 +356,10 @@ def fetch_authorized_keys(host, username, console_lock, pwds):
             raise e
     if console_lock and console_lock.locked():
         console_lock.release()
-    sftp = client.open_sftp()
+    sftp = None
+    keys = []
     try:
+        sftp = client.open_sftp()
         if username == "root":
             sftp.get(
                 "/root/.ssh/authorized_keys",
@@ -369,16 +376,18 @@ def fetch_authorized_keys(host, username, console_lock, pwds):
             if console_lock:
                 console_lock.acquire()
             print(f"No authorized_keys file for {username}@{host}, skipping.")
-            keys = []
             open(f"./tempKeys/authorized_keys_{host}_{username}", "w").close()
             if console_lock:
                 console_lock.release()
         else:
             raise e
+    finally:
+        if sftp:
+            sftp.close()
+        client.close()
 
-    os.remove(f"./tempKeys/authorized_keys_{host}_{username}")
-    sftp.close()
-    client.close()
+    if os.path.exists(f"./tempKeys/authorized_keys_{host}_{username}"):
+        os.remove(f"./tempKeys/authorized_keys_{host}_{username}")
     if not keys:
         return
     for key in keys:  # check if key already exists in all_keys
