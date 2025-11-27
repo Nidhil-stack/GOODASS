@@ -199,7 +199,7 @@ def upload_ssh_file(host, username, pwds, console_lock=None, directory="./tempKe
                 console_lock.acquire()
             if "No such file" in str(e):
                 print(
-                    f"File path does not exist on {username}@{host}. Please ensure .ssh directory exists."
+                    f"Remote .ssh directory does not exist for {username}@{host}. Upload failed."
                 )
                 if console_lock:
                     console_lock.release()
@@ -358,14 +358,11 @@ def fetch_authorized_keys(host, username, console_lock, pwds):
                             print(e)
                             break
             finally:
-                if console_lock and console_lock.locked():
+                if console_lock:
                     console_lock.release()
         else:
             raise e
-    if console_lock and console_lock.locked():
-        console_lock.release()
-    sftp = None
-    keys = []
+    sftp = client.open_sftp()
     try:
         sftp = client.open_sftp()
         if username == "root":
