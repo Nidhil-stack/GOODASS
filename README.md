@@ -5,7 +5,7 @@
 ### ⚠️ **WORK IN PROGRESS**
 
 This branch is under active development. **No stable installation procedure exists.** Do not use this code in production.
-### ❗**I'm close to a first readily usable release, if you want to try it go to the "wip_pip-packaging" branch"
+### ❗**I'm close to a first readily usable release, if you want to try it go to the "wip_pip-packaging" branch"**
 
 -----
 
