@@ -103,7 +103,7 @@ def main():
         settings = {"ssh_private_key_path": ssh_private_key_path}
         with open(os.path.join(config_dir, "settings.yaml"), "w") as f:
             yaml.dump(settings, f)
-        with open(os.path.join(config_dir, "config.yaml"), "r") as f:
+        with open(config_path, "r") as f:
             config = yaml.safe_load(f)
             config["users"].append(
                 {
