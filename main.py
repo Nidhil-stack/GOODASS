@@ -16,10 +16,16 @@ import libs.userManager as userManager
 import libs.hostManager as hostManager
 import yaml
 import signal
+import tempfile
 
 pwds = {}
 
-directory = "./tempKeys"
+# directory = "./tempKeys"
+# chose tmp dir based on os in the equivalent of /tmp
+directory = tempfile.mkdtemp(prefix="ssh-key-manager-")
+print(f"Using temporary directory: {directory}")
+input("Press Enter to continue...")
+
 if not os.path.exists(directory):
     os.makedirs(directory)
 
