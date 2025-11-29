@@ -34,6 +34,8 @@ The program now includes an **interactive Setup Wizard** that handles the initia
 
 ### 📝 Configuration Files
 
+> Note: **since the 0.2 update no file needs to be created or edited manually, although you can always edit them manually or import them if you find it faster**
+
 The primary configuration file, **`settings.yaml`**, must be located in the application configuration directory.
 
 | Operating System | Absolute Configuration Path |
@@ -62,7 +64,7 @@ max_threads_per_host: 5  # Limit to 5 concurrent connections per host
   * Set to `0` or omit the setting entirely for **no limit** (default behavior)
 
 > **❗ Error Handling Note**
-> All program errors, warnings, and log messages are output to the terminal in **Interactive Mode**. If running in **Non-Interactive Mode** (e.g., using `--fix-keys`), these messages are **redirected and saved** in files within the same **configuration directory** (e.g., `~/.config/goodass/`). This is essential for debugging and reporting issues in automated runs.
+> All program errors, warnings, and log messages have been removed from output to the terminal in **Interactive Mode** or **Non-Interactive Mode** (e.g., using `--fix-keys`), these messages are **redirected and saved** in files within the same **configuration directory** (e.g., `~/.config/goodass/`). This is essential for debugging and reporting issues in automated runs. If you need to you can set **debug mode** by setting the verbosity level to 4. Doing that will give back the errors to the terminal.
 
 -----
 
