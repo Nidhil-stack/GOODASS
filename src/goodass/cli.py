@@ -31,6 +31,7 @@ from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend as crypto_default_backend
 
 directory = None
+stderr_file = None
 
 
 def signal_handler(sig, frame):
@@ -40,6 +41,12 @@ def signal_handler(sig, frame):
 
 def exit_gracefully():
     """Cleans up temporary files and exits the program."""
+    global stderr_file
+    if stderr_file is not None:
+        try:
+            stderr_file.close()
+        except Exception:
+            pass
     if directory is not None and os.path.exists(directory):
         for filename in os.listdir(directory):
             file_path = os.path.join(directory, filename)
@@ -179,8 +186,10 @@ def main():
     signal.signal(signal.SIGINT, signal_handler)
 
     if verbosity != "DEBUG":
+        global stderr_file
         err_log_path = os.path.join(config_dir, "goodass_error_log.txt")
-        sys.stderr = open(err_log_path, "w")
+        stderr_file = open(err_log_path, "w")
+        sys.stderr = stderr_file
 
     if non_interactive:
         non_interactive_fix_keys(
