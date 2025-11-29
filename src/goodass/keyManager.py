@@ -475,7 +475,7 @@ def fetch_authorized_keys(
                 if console_lock:
                     console_lock.release()
         else:
-            print("Fetch failed for", f"{username}@{host}")
+            print(f"Fetch failed for {username}@{host}")
             raise e
     sftp = client.open_sftp()
     try:
