@@ -1,0 +1,28 @@
+hosts:
+  - description: Beta Server
+    host: 10.0.0.22
+    users:
+      - root
+      - git
+  - description: Production Server
+    host: 10.0.0.23
+    users:
+      - root
+      - test
+users:
+  - email: jdoe@fakemail.com
+    keys:
+      - admin: true #ADMIN keys have access to all servers, it is recommended to create an admin access for GOODASS
+        hostname: jdoe@arch #MANDATORY, must be unique
+        key: AAAAC3NzaC1lZDI1NTE5AAAAICyDd78934htjklev098e4avjaklghDSFADFARAEAFDS
+        type: ssh-ed25519
+    name: Jon Doe
+  - email: dupont@fakemail.com #MANDATORY, must be unique
+    keys:
+      - access:
+          - host: 10.0.0.22
+            username: git
+        hostname: ""
+        key: AAAAC3NzaC1adsjkf43our9800943rhvrleksjfdacomòjapowuc4ijmrc0cmCARAEW34
+        type: ssh-ed25519
+    name: Jean Dupont
