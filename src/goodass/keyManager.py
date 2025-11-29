@@ -761,3 +761,14 @@ def check_keys(all_user_keys):
             )
 
     return checked_keys
+
+
+def non_interactive_fix_keys(pwds, config_path, ssh_private_key_path, directory):
+    """Non-interactive function to fix SSH keys."""
+    fix_keys_cli(
+        pwds,
+        config_path,
+        ssh_private_key_path=ssh_private_key_path,
+        directory=directory,
+        interactive=False,
+    )
