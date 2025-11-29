@@ -7,6 +7,16 @@ if __package__ is None:
 else:
     from . import autocomplete
 
+# Commands available for host management
+HOST_COMMANDS = ['add', 'remove', 'rm', 'back', 'done', 'q']
+
+# Prompt text for host management CLI
+HOST_CLI_PROMPT = (
+    "Type 'add' to add host, 'remove' to remove host, followed by the host\n"
+    "you intend to edit in the format username@host\n"
+    "(type 'back', 'done' or 'q' to finish, Tab for completion): "
+)
+
 
 def load_config(path="config.yaml"):
     """Loads the configuration from a YAML file.
@@ -147,7 +157,7 @@ def get_host_completions(config):
     Returns:
     - list: List of completion options.
     """
-    completions = ['add', 'remove', 'rm', 'back', 'done', 'q']
+    completions = list(HOST_COMMANDS)
     
     for host_entry in config.get("hosts", []):
         host = host_entry.get("host", "")
@@ -182,7 +192,7 @@ def host_cli(config="config.yaml"):
         # Get completions for autocomplete
         completions = get_host_completions(config)
         user_input = autocomplete.input_with_list_completion(
-            "Type 'add' to add host, 'remove' to remove host, followed by the host you intend to edit in the format username@host (type 'back', 'done' or 'q' to finish): \n(Use Tab for completion)\n",
+            HOST_CLI_PROMPT,
             completions
         ).strip()
         if user_input.lower() in ["back", "done", "q"]:

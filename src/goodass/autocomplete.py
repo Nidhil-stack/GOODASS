@@ -5,12 +5,23 @@ including file paths, host selections, and user selections.
 """
 
 import os
-import readline
 import glob
+
+# Try to import readline, which is not available on Windows by default
+try:
+    import readline
+    READLINE_AVAILABLE = True
+except ImportError:
+    READLINE_AVAILABLE = False
 
 
 def setup_readline():
-    """Initialize readline with tab completion settings."""
+    """Initialize readline with tab completion settings.
+    
+    On Windows without readline, this function does nothing.
+    """
+    if not READLINE_AVAILABLE:
+        return
     # Enable tab completion
     readline.parse_and_bind("tab: complete")
     # Set completer delimiters (don't break on these characters)
@@ -96,7 +107,16 @@ def input_with_path_completion(prompt):
     
     Returns:
     - str: The user's input.
+    
+    Note:
+        On Windows without readline, falls back to standard input without completion.
     """
+    if not READLINE_AVAILABLE:
+        user_input = input(prompt)
+        if user_input.startswith('~'):
+            user_input = os.path.expanduser(user_input)
+        return user_input
+    
     setup_readline()
     old_completer = readline.get_completer()
     readline.set_completer(path_completer)
@@ -120,7 +140,13 @@ def input_with_list_completion(prompt, options):
     
     Returns:
     - str: The user's input.
+    
+    Note:
+        On Windows without readline, falls back to standard input without completion.
     """
+    if not READLINE_AVAILABLE:
+        return input(prompt)
+    
     setup_readline()
     old_completer = readline.get_completer()
     completer = create_list_completer(options)
@@ -133,5 +159,9 @@ def input_with_list_completion(prompt, options):
 
 
 def disable_completion():
-    """Disable tab completion."""
-    readline.set_completer(None)
+    """Disable tab completion.
+    
+    On Windows without readline, this function does nothing.
+    """
+    if READLINE_AVAILABLE:
+        readline.set_completer(None)
