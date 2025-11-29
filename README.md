@@ -8,7 +8,7 @@ This document provides installation instructions and operational guidelines for 
 
 ### 📥 Installation
 
-1.  **Download the Release File:** Download the latest Wheel file (`.whl`) from the **goodass 0.0.5 release page**: [https://github.com/Nidhil-stack/GOODASS/releases/latest](https://github.com/Nidhil-stack/GOODASS/releases/latest)
+1.  **Download the Release File:** Download the latest Wheel file (`.whl`) from the **goodass release page**: [https://github.com/Nidhil-stack/GOODASS/releases](https://github.com/Nidhil-stack/GOODASS/releases)
 2.  **Install the Package:** Install the package using **pip** from the location where you downloaded the file (replace `path/to/download` with the actual path):
 
 <!-- end list -->
