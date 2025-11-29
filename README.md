@@ -14,7 +14,7 @@ This document provides installation instructions and operational guidelines for 
 <!-- end list -->
 
 ```bash
-pip install path/to/download/goodass-0.1.0.whl
+pip install path/to/download/goodass-0.1.1.whl
 ```
 
 ### 🚀 First Run and Setup Wizard
@@ -92,6 +92,10 @@ The program can be run in two modes: **Interactive** (default) or **Non-Interact
 3.  **Main Operations:** Use the interactive program (or wizard) to:
       * Add **hosts**, **users**, and associated **keys**.
       * Launch the **"fix keys" utility**, which synchronizes your configured keys to the `authorized_keys` file on all added hosts.
+        
+### 🔄 Compatibility
+- Autocomplete requires the `readline` module (included by default on Linux/macOS)
+- On Windows, the application gracefully falls back to standard input without completion
 
 ### 🤖 Non-Interactive Mode (For Automation)
 
