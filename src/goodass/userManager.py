@@ -49,7 +49,7 @@ def user_add(config, username, email, keys):
         "keys": [{"type": k["type"], "key": k["key"]} for k in keys],
     }
     for user in config.get("users", []):
-        if user["email"] == email:
+        if user.get("email", "") == email:
             print(f"User with email {email} already exists.")
             return config
     config.setdefault("users", []).append(new_user)
@@ -137,14 +137,14 @@ def user_add_key(config, email, key):
     """
     users = config.get("users", [])
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             key_type = key.split()[0]
             key_value = key.split()[1]
             key_hostname = key.split()[2] if len(key.split()) > 2 else ""
             key_access = []
             for existing_key in user.get("keys", []):
                 if existing_key["key"] == key_value:
-                    print(f"Key already exists for user {user['name']}.")
+                    print(f"Key already exists for user {user.get('name', '')}.")
                     return config
             user.setdefault("keys", []).append(
                 {
@@ -176,7 +176,7 @@ def user_add_key_cli(config="config.yaml", email=None):
     users = config.get("users", [])
     user_exists = False
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             user_exists = True
             break
     if not user_exists:
@@ -194,11 +194,11 @@ def user_add_key_cli(config="config.yaml", email=None):
             key_value = key.split()[1]
             key_hostname = key.split()[2] if len(key.split()) > 2 else ""
             for user in users:
-                if user["email"] == email:
+                if user.get("email", "") == email:
                     user.setdefault("keys", []).append(
                         {"type": key_type, "key": key_value, "hostname": key_hostname}
                     )
-                    print(f"Key added to user {user['name']}.")
+                    print(f"Key added to user {user.get('name', '')}.")
         except IndexError:
             print(
                 "Invalid key format. Please enter the key in the format: <type> <key> [hostname]"
@@ -218,13 +218,13 @@ def user_remove_key(config, email, key_value):
     """
     users = config.get("users", [])
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             keys = user.get("keys", [])
             for existing_key in keys:
                 if existing_key["key"] == key_value:
                     keys.remove(existing_key)
                     return config
-            print(f"Key not found for user {user['name']}.")
+            print(f"Key not found for user {user.get('name', '')}.")
             input("Press Enter to continue...")
             return config
     return config
@@ -249,7 +249,7 @@ def user_remove_key_cli(config="config.yaml", email=None):
     users = config.get("users", [])
     user_exists = False
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             user_exists = True
             break
     if not user_exists:
@@ -265,7 +265,7 @@ def user_remove_key_cli(config="config.yaml", email=None):
             key_index = int(key_number) - 1
             users = config.get("users", [])
             for user in users:
-                if user["email"] == email:
+                if user.get("email", "") == email:
                     keys = user.get("keys", [])
                     if 0 <= key_index < len(keys):
                         key_value = keys[key_index]["key"]
@@ -279,14 +279,14 @@ def user_remove_key_cli(config="config.yaml", email=None):
             input("Press Enter to continue...")
             continue
         for user in users:
-            if user["email"] == email:
+            if user.get("email", "") == email:
                 keys = user.get("keys", [])
                 for existing_key in keys:
                     if existing_key["key"] == key_value:
                         keys.remove(existing_key)
                         break
                 else:
-                    print(f"Key not found for user {user['name']}.")
+                    print(f"Key not found for user {user.get('name', '')}.")
                     input("Press Enter to continue...")
     save_config(config, config_path)
 
@@ -299,7 +299,7 @@ def user_print_keys(config, email):
     """
     users = config.get("users", [])
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             key_table = prettytable.PrettyTable()
             key_table.field_names = ["Number", "Type", "Key", "Hostname"]
             for i, key in enumerate(user.get("keys", []), start=1):
@@ -307,7 +307,7 @@ def user_print_keys(config, email):
                 key_value = key.get("key", "N/A")
                 key_hostname = key.get("hostname", "N/A")
                 key_table.add_row([i, key_type, key_value, key_hostname])
-            print(f"Keys for user {user['name']}:")
+            print(f"Keys for user {user.get('name', '')}:")
             print(key_table)
             return
     print(f"User with email {email} does not exist.")
@@ -323,7 +323,7 @@ def user_remove(config, email):
     """
     users = config.get("users", [])
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             users.remove(user)
             return config
     return config
@@ -347,7 +347,7 @@ def user_remove_cli(config="config.yaml", email=None):
     users = config.get("users", [])
     user_exists = False
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             user_exists = True
             break
     if not user_exists:
@@ -376,10 +376,10 @@ def user_key_access_print(config, email, key_value):
         input("Press Enter to continue...")
         return
     for user in users:
-        if user["email"] == email:
+        if user("email", "") == email:
             keys = user.get("keys", [])
             if not keys:
-                print(f"No keys found for user {user['name']}.")
+                print(f"No keys found for user {user.get('email', '')}.")
                 input("Press Enter to continue...")
                 return
             for existing_key in keys:
@@ -390,10 +390,10 @@ def user_key_access_print(config, email, key_value):
                     if access:
                         for perm in access:
                             table.add_row([f"{perm['username']}@{perm['host']}"])
-                    print(f"Access permissions for key of user {user['name']}:")
+                    print(f"Access permissions for key of user {user.get('name', '')}:")
                     print(table)
                     return
-            print(f"Key not found for user {user['name']}.")
+            print(f"Key not found for user {user.get('name', '')}.")
             input("Press Enter to continue...")
             return
     print(f"User with email {email} does not exist.")
@@ -412,7 +412,7 @@ def user_key_access_add(config, email, key_value, access):
     """
     users = config.get("users", [])
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             keys = user.get("keys", [])
             for existing_key in keys:
                 if existing_key["key"] == key_value:
@@ -420,7 +420,7 @@ def user_key_access_add(config, email, key_value, access):
                         existing_key["access"] = []
                     existing_key["access"].append(access)
                     return config
-            print(f"Key not found for user {user['name']}.")
+            print(f"Key not found for user {user.get('name', '')}.")
             input("Press Enter to continue...")
             return config
     return config
@@ -438,7 +438,7 @@ def user_key_access_remove(config, email, key_value, access):
     """
     users = config.get("users", [])
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             keys = user.get("keys", [])
             for existing_key in keys:
                 if existing_key["key"] == key_value:
@@ -446,7 +446,7 @@ def user_key_access_remove(config, email, key_value, access):
                     if access in existing_access:
                         existing_access.remove(access)
                     return config
-            print(f"Key not found for user {user['name']}.")
+            print(f"Key not found for user {user.get('name', '')}.")
             input("Press Enter to continue...")
             return config
     return config
@@ -471,7 +471,7 @@ def user_key_access_cli(config="config.yaml", email=None):
     users = config.get("users", [])
     user_exists = False
     for user in users:
-        if user["email"] == email:
+        if user.get("email", "") == email:
             user_exists = True
             break
     if not user_exists:
@@ -487,7 +487,7 @@ def user_key_access_cli(config="config.yaml", email=None):
             key_index = int(key_number) - 1
             users = config.get("users", [])
             for user in users:
-                if user["email"] == email:
+                if user.get("email", "") == email:
                     keys = user.get("keys", [])
                     if 0 <= key_index < len(keys):
                         if keys[key_index].get("admin", False):
@@ -540,3 +540,54 @@ def user_key_access_cli(config="config.yaml", email=None):
                 input("Press Enter to continue...")
     save_config(config, config_path)
     return config
+
+
+def user_cli(config="config.yaml"):
+    """CLI for managing users in the configuration.
+
+    Parameters:
+    - config (str or dict): Either a string specifying the path to the configuration file (default: 'config.yaml'),
+      or a dictionary containing the loaded configuration. If a string is provided, the configuration will be loaded from the file.
+    """
+    config_path = config if isinstance(config, str) else "config.yaml"
+    if isinstance(config, str):
+        config = load_config(config)
+
+    user_menu = """
+User Management Menu:
+
+    1. Add User
+    2. Add Key(s) to User
+    3. Remove Key from User
+    4. Remove User
+    5. Manage User Key Access
+
+    6. Back to Main Menu
+    """
+
+    while True:
+        os.system("cls" if os.name == "nt" else "clear")
+        user_print(config)
+        print(user_menu)
+        option = input("Enter option number: ")
+        os.system("cls" if os.name == "nt" else "clear")
+        if option == "1":
+            user_add_cli(config_path)
+            config = load_config(config_path)
+        elif option == "2":
+            user_add_key_cli(config_path)
+            config = load_config(config_path)
+        elif option == "3":
+            user_remove_key_cli(config_path)
+            config = load_config(config_path)
+        elif option == "4":
+            user_remove_cli(config_path)
+            config = load_config(config_path)
+        elif option == "5":
+            user_key_access_cli(config_path)
+            config = load_config(config_path)
+        elif option == "6" or option.lower() == "back" or option.lower() == "q":
+            return
+        else:
+            print("Invalid option selected.")
+            input("Press Enter to continue...")

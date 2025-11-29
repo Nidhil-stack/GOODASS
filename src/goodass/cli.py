@@ -403,11 +403,11 @@ def main():
 
     signal.signal(signal.SIGINT, signal_handler)
 
-    if verbosity != "DEBUG":
-        global stderr_file
-        err_log_path = os.path.join(config_dir, "goodass_error_log.txt")
-        stderr_file = open(err_log_path, "w")
-        sys.stderr = stderr_file
+    # if verbosity != "DEBUG":
+    #    global stderr_file
+    #    err_log_path = os.path.join(config_dir, "goodass_error_log.txt")
+    #    stderr_file = open(err_log_path, "w")
+    #    sys.stderr = stderr_file
 
     if non_interactive:
         non_interactive_fix_keys(
@@ -423,15 +423,11 @@ def main():
 Welcome to the SSH Key Manager, please select an option:\n
     1. Fetch and display all SSH keys
     2. Fix SSH key issues
-    3. Add User
-    4. Add Key(s) to User
-    5. Remove Key from User
-    6. Remove User
-    7. Manage User Key Access
-    8. Manage Hosts
-    9. Edit Settings
+    3. Manage Users
+    4. Manage Hosts
+    5. Edit Settings
     
-    10. Exit
+    6. Exit
     """
 
     #### Main CLI Loop ####
@@ -455,20 +451,12 @@ Welcome to the SSH Key Manager, please select an option:\n
                 directory=directory,
             )
         elif option == "3":
-            userManager.user_add_cli(config_path)
+            userManager.user_cli(config_path)
         elif option == "4":
-            userManager.user_add_key_cli(config_path)
-        elif option == "5":
-            userManager.user_remove_key_cli(config_path)
-        elif option == "6":
-            userManager.user_remove_cli(config_path)
-        elif option == "7":
-            userManager.user_key_access_cli(config_path)
-        elif option == "8":
             hostManager.host_cli(config_path)
-        elif option == "9":
+        elif option == "5":
             ssh_private_key_path = settings_cli(config_dir, config_path)
-        elif option == "10" or option.lower() == "exit" or option.lower() == "q":
+        elif option == "6" or option.lower() == "exit" or option.lower() == "q":
             exit_gracefully()
         else:
             print("Invalid option selected.")
