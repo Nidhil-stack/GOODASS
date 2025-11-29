@@ -128,7 +128,7 @@ def main():
 
     signal.signal(signal.SIGINT, utils.signal_handler)
 
-    if verbosity != "DEBUG":
+    if verbosity != 4:
         err_log_path = os.path.join(config_dir, "goodass_error_log.txt")
         stderr_file = open(err_log_path, "w")
         sys.stderr = stderr_file
