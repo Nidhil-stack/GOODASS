@@ -2,13 +2,12 @@ import os
 import yaml
 import prettytable
 
-if __package__ is None:
+if __package__ is None or __package__ == "":
     import autocomplete
 else:
     from . import autocomplete
-
 # Commands available for host management
-HOST_COMMANDS = ['add', 'remove', 'rm', 'back', 'done', 'q']
+HOST_COMMANDS = ["add", "remove", "rm", "back", "done", "q"]
 
 # Prompt text for host management CLI
 HOST_CLI_PROMPT = (
@@ -147,18 +146,18 @@ def hosts_remove(config, host, user=None):
 
 def get_host_completions(config):
     """Get list of completions for host management.
-    
+
     Returns a list of removal commands with user@host combinations and hosts from config.
     Only provides completions for removing hosts, not adding (since new hosts can be any string).
-    
+
     Parameters:
     - config (dict): Configuration dictionary containing hosts.
-    
+
     Returns:
     - list: List of completion options.
     """
     completions = list(HOST_COMMANDS)
-    
+
     for host_entry in config.get("hosts", []):
         host = host_entry.get("host", "")
         if host:
@@ -169,7 +168,7 @@ def get_host_completions(config):
             for user in host_entry.get("users", []):
                 completions.append(f"remove {user}@{host}")
                 completions.append(f"rm {user}@{host}")
-    
+
     return completions
 
 
@@ -192,7 +191,7 @@ def host_cli(config="config.yaml"):
         user_input = autocomplete.input_with_list_completion(
             HOST_CLI_PROMPT,
             completions,
-            allow_spaces=True  # Allow completion of "remove user@host" with spaces
+            allow_spaces=True,  # Allow completion of "remove user@host" with spaces
         ).strip()
         if user_input.lower() in ["back", "done", "q"]:
             return
@@ -213,4 +212,3 @@ def host_cli(config="config.yaml"):
             save_config(config, config_path)
         else:
             print("Invalid action. Please try again.")
-
