@@ -43,13 +43,13 @@ LICENSE_TEXT = "Licensed under AGPL-3.0 | https://github.com/Nidhil-stack/GOODAS
 
 def advanced_options_cli(config_dir, config_path, ssh_private_key_path, settings):
     """CLI for advanced options submenu (Sync, GPG, Multi-File).
-    
+
     Parameters:
     - config_dir (str): Path to the configuration directory.
     - config_path (str): Path to the ssh-config.yaml file.
     - ssh_private_key_path (str): Path to the SSH private key.
     - settings (dict): Settings dictionary.
-    
+
     Returns:
     - dict: Updated settings dictionary.
     """
@@ -62,14 +62,14 @@ Advanced Options:
 
     4. Back to Main Menu
     """
-    
+
     while True:
         os.system("cls" if os.name == "nt" else "clear")
         print(advanced_menu)
         print(f"\n{LICENSE_TEXT}")
         option = input("\nEnter option number: ")
         os.system("cls" if os.name == "nt" else "clear")
-        
+
         if option == "1":
             syncManager.sync_cli(config_dir, config_path, ssh_private_key_path)
         elif option == "2":
@@ -82,7 +82,7 @@ Advanced Options:
         else:
             print("Invalid option selected.")
             input("Press Enter to continue...")
-    
+
     return settings
 
 
@@ -95,10 +95,10 @@ def main():
     else:
         non_interactive = False
     directory = tempfile.mkdtemp(prefix="goodass-")
-    
+
     # Set directory reference in utils module for cleanup
     utils.directory = directory
-    
+
     if not os.path.exists(directory):
         os.makedirs(directory)
     pwds = {}
@@ -182,6 +182,7 @@ def main():
 
     signal.signal(signal.SIGINT, utils.signal_handler)
 
+    input("verbosity: " + str(verbosity) + " (press Enter to continue)")
     if verbosity != 4:
         err_log_path = os.path.join(config_dir, "goodass_error_log.txt")
         stderr_file = open(err_log_path, "w")
@@ -191,7 +192,9 @@ def main():
     settings = multiFileManager.file_selection_prompt(settings, config_dir)
 
     # Perform autosync if enabled (syncs ALL config files based on selection)
-    syncManager.perform_autosync(config_path, ssh_private_key_path, settings, non_interactive)
+    syncManager.perform_autosync(
+        config_path, ssh_private_key_path, settings, non_interactive
+    )
 
     if non_interactive:
         keyManager.non_interactive_fix_keys(
@@ -241,7 +244,9 @@ Welcome to the SSH Key Manager (v0.3.0-pre), please select an option:
         elif option == "4":
             hostManager.host_cli(config_path, config_dir=config_dir)
         elif option == "5":
-            settings = advanced_options_cli(config_dir, config_path, ssh_private_key_path, settings)
+            settings = advanced_options_cli(
+                config_dir, config_path, ssh_private_key_path, settings
+            )
         elif option == "6":
             ssh_private_key_path = settingsManager.settings_cli(config_dir, config_path)
             # Reload settings to get updated gpg_home using consistent function

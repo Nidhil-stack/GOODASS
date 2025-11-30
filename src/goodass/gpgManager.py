@@ -221,9 +221,7 @@ def sign_config(config_path, key_fingerprint=None, passphrase=None, gpg_home=Non
         data = f.read()
 
     # Create detached signature
-    signed = gpg.sign(
-        data, keyid=key_fingerprint, passphrase=passphrase, detach=True, armor=True
-    )
+    signed = gpg.sign(data, keyid=key_fingerprint, passphrase=passphrase, detach=True)
 
     if signed.data:
         sig_path = config_path + ".sig"
@@ -264,11 +262,8 @@ def verify_config_signature(config_path, trusted_fingerprints, gpg_home=None):
 
     gpg = get_gpg(gpg_home)
 
-    with open(sig_path, "rb") as f:
-        sig_data = f.read()
-
-    # Verify the detached signature
-    verified = gpg.verify_file(open(config_path, "rb"), sig_path)
+    with open(sig_path, "rb") as signature:
+        verified = gpg.verify_file(signature, config_path)
 
     if not verified.valid:
         print(f"Signature verification failed: {verified.status}")
