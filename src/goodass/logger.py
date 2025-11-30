@@ -53,6 +53,21 @@ class SecureLogger:
             cls._instance._initialized = False
         return cls._instance
     
+    @classmethod
+    def reset_instance(cls):
+        """Reset the singleton instance to allow creating a new logger.
+        
+        This is useful for testing or when you need to reinitialize
+        the logger with different settings.
+        """
+        if cls._instance is not None:
+            # Try to cleanup before resetting
+            try:
+                cls._instance._cleanup()
+            except Exception:
+                pass
+        cls._instance = None
+    
     def __init__(self, config_dir: Optional[str] = None, verbosity: int = 1):
         """Initialize the secure logger.
         
@@ -244,6 +259,7 @@ class SecureLogger:
             # Get secret keys
             secret_keys = gpgManager.list_secret_keys(self._gpg_home)
             if not secret_keys:
+                # No GPG keys available - not an error, just can't sign
                 return False
             
             gpg = gpgManager.get_gpg(self._gpg_home)
@@ -257,9 +273,19 @@ class SecureLogger:
                 with open(sig_path, 'wb') as f:
                     f.write(signed.data)
                 return True
-        except Exception:
-            pass
-        return False
+            # Signing failed but GPG didn't raise an exception
+            return False
+        except ImportError:
+            # GPG module not available
+            return False
+        except (IOError, OSError) as e:
+            # File operation errors - log but don't fail
+            self.error_logger.warning(f"Could not sign hash chain: {e}")
+            return False
+        except Exception as e:
+            # Unexpected errors - log for debugging
+            self.error_logger.warning(f"GPG signing error: {type(e).__name__}: {e}")
+            return False
     
     def record_config_signing(self, config_path: str):
         """Record when a config file is signed.
@@ -462,10 +488,12 @@ class SecureLogger:
         if not os.path.exists(path):
             return "N/A"
         size = os.path.getsize(path)
-        for unit in ['B', 'KB', 'MB', 'GB']:
+        if size < 1024:
+            return f"{int(size)} B"
+        for unit in ['KB', 'MB', 'GB']:
+            size /= 1024
             if size < 1024:
                 return f"{size:.1f} {unit}"
-            size /= 1024
         return f"{size:.1f} TB"
     
     def _cleanup(self):
@@ -523,8 +551,8 @@ def init_logger(config_dir: Optional[str] = None, verbosity: int = 1) -> SecureL
     - SecureLogger: The initialized logger instance
     """
     global _logger
-    # Force new instance by resetting singleton
-    SecureLogger._instance = None
+    # Force new instance by using class method
+    SecureLogger.reset_instance()
     _logger = SecureLogger(config_dir, verbosity)
     return _logger
 

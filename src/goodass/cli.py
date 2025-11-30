@@ -190,7 +190,8 @@ def main():
 
     signal.signal(signal.SIGINT, utils.signal_handler)
 
-    # Only redirect stderr if not in debug mode (verbosity 3)
+    # In debug mode (verbosity 3), stderr is NOT redirected so errors are shown
+    # directly in the terminal for easier debugging. Otherwise, errors go to log file.
     if verbosity < 3:
         err_log_path = os.path.join(config_dir, "goodass_error_log.txt")
         stderr_file = open(err_log_path, "w")

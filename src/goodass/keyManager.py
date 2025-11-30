@@ -313,14 +313,14 @@ def upload_ssh_file(
                                 attempts += 1
                                 log.print_default("Authentication failed, please try again.")
                             else:
-                                log.print_default("Upload failed for", f"{username}@{host}")
+                                log.print_default(f"Upload failed for {username}@{host}")
                                 log.log_server("upload", f"Upload failed for {username}@{host}: {e}", "ERROR")
                                 raise e
                 finally:
                     if console_lock and console_lock.locked():
                         console_lock.release()
             else:
-                log.print_default("Upload failed for", f"{username}@{host}")
+                log.print_default(f"Upload failed for {username}@{host}")
                 log.log_server("upload", f"Connection failed for {username}@{host}: {e}", "ERROR")
                 raise e
         if console_lock and console_lock.locked():
@@ -581,7 +581,7 @@ def fetch_authorized_keys(
             if console_lock:
                 console_lock.acquire()
             try:
-                log.print_default("Using password authentication for", f"{username}@{host}")
+                log.print_default(f"Using password authentication for {username}@{host}")
                 attempts = 0
                 while attempts < 3:
                     try:
@@ -596,13 +596,13 @@ def fetch_authorized_keys(
                         client.connect(host, username=username, password=password)
                         log.log_server("fetch", f"Connected to {username}@{host} via password (attempt {attempts + 1})")
                         break
-                    except Exception as e:
-                        if "Authentication failed" in str(e):
+                    except Exception as inner_e:
+                        if "Authentication failed" in str(inner_e):
                             attempts += 1
                             log.print_default("Authentication failed, please try again.")
                         else:
-                            log.print_default(str(e))
-                            log.log_server("fetch", f"Connection error for {username}@{host}: {e}", "ERROR")
+                            log.print_default(str(inner_e))
+                            log.log_server("fetch", f"Connection error for {username}@{host}: {inner_e}", "ERROR")
                             break
             finally:
                 if console_lock:
